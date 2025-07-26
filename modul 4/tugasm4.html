@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toko Elektronik Cepat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f008a2;
+        }
+        .header {
+            background-color: #f2c912;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        #product-display {
+            border: 1px solid #186abc;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: rgb(179, 42, 42);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .product-image {
+            max-height: 300px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .product-list-item {
+            transition: all 0.3s;
+        }
+        .product-list-item:hover {
+            background-color: #0d64b6;
+            transform: translateX(5px);
+        }
+        .btn-slider {
+            margin: 0 5px;
+        }
+        #order-form {
+            background-color: rgb(231, 255, 10);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        #order-summary {
+            background-color: #106fcd;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border: 1px solid #1080ef;
+        }
+        .summary-item {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Toko Elektronik Cepat</h1>
+        <div id="current-time" class="fs-5"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div id="product-display" class="text-center">
+                <img id="product-image" src="" alt="Gambar Produk" class="product-image img-fluid">
+                <div class="my-3">
+                    <h2 id="product-name" class="fw-bold"></h2>
+                    <p id="product-price" class="h4 text-primary fw-bold"></p>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button class="btn btn-secondary btn-slider" onclick="prevImage()">
+                        <i class="bi bi-chevron-left"></i> Previous
+                    </button>
+                    <button class="btn btn-secondary btn-slider" onclick="nextImage()">
+                        Next <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Daftar Produk</h3>
+                </div>
+                <div class="card-body">
+                    <ul id="product-list" class="list-group list-group-flush"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="order-form" class="card">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Form Pemesanan</h3>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="customer-name" class="form-label">Nama Pemesan</label>
+                <input type="text" id="customer-name" class="form-control" placeholder="Masukkan nama anda">
+            </div>
+            <div class="mb-3">
+                <label for="order-quantity" class="form-label">Jumlah Pesan</label>
+                <input type="number" id="order-quantity" class="form-control" placeholder="1" min="1">
+            </div>
+            <div class="mb-3">
+                <label for="promo-code" class="form-label">Kode Promo (Opsional)</label>
+                <input type="text" id="promo-code" class="form-control" placeholder="Contoh: DISKON10">
+            </div>
+            <button class="btn btn-primary w-100" onclick="placeOrder()">
+                <i class="bi bi-cart-check"></i> Pesan Sekarang
+            </button>
+        </div>
+    </div>
+
+    <div id="order-summary" class="card d-none">
+        <div class="card-header bg-success text-white">
+            <h3 class="mb-0">Ringkasan Pesanan</h3>
+        </div>
+        <div class="card-body" id="summary-content">
+            <!-- Ringkasan pesanan akan muncul di sini -->
+        </div>
+    </div>
+
+    <!-- Icons Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+
+    <script>
+        const products = [
+            {
+                name: "Laptop Gaming ASUS ROG",
+                price: 15999000,
+                images: [
+                    "https://images.tokopedia.net/img/cache/700/VqbcmM/2023/4/20/0b2c2c8f-1f4c-4e3a-9b7a-6d8c3d9c6e4f.jpg",
+                    "https://images.tokopedia.net/img/cache/700/VqbcmM/2023/4/20/4c8d9b0d-1d0e-4b4f-9e3e-6d8c3d9c6e4f.jpg",
+                    "https://images.tokopedia.net/img/cache/700/VqbcmM/2023/4/20/8f2c2c8b-1f4c-4e3a-9b7a-6d8c3d9c6e4f.jpg"
+                ],
+                description: "Laptop gaming dengan processor Intel Core i7 generasi terbaru dan GPU NVIDIA RTX 3060"
+            },
+            {
+                name: "Smartphone Samsung S22 Ultra",
+                price: 14999000,
+                images: [
+                    "https://images.tokopedia.net/img/cache/700/VqbcmM/2023/4/20/1b2c2c8f-1f4c-4e3a-9b7a-6d8c3d9c6e4f.jpg",
+                    "https://images.tokopedia.net/img/cache/700/VqbcmM/2023/4/20/5c8d9b0d-1d0e-4b4f-9e3e-6d8c3d9c6e4f.jpg",
+                    "https://images.tokopedia.net/img/cache/700/VqbcmM/2023/4/20/9f2c2c8b-1f4c-4e3a-9b7a-6d8c3d9c6e4f.jpg"
+                ],
+                description: "Smartphone flagship dengan kamera 108MP, S Pen, dan layar Dynamic AMOLED 2X"
+            },
+            {
+                name: "Headphone Sony WH-1000XM4",
+                price: 3999000,
+                images: [
+                    "https://images.tokopedia.net/img/cache/700/VqbcmM/2023/4/20/2b2c2c8f-1f4c-4e3a-9b7a-6d8c3d9c6e4f.jpg",
+                    "https://images.tokopedia.net/img/cache/700/VqbcmM/2023/4/20/6c8d9b0d-1d0e-4b4f-9e3e-6d8c3d9c6e4f.jpg",
+                    "https://images.tokopedia.net/img/cache/700/VqbcmM/2023/4/20/0f2c2c8b-1f4c-4e3a-9b7a-6d8c3d9c6e4f.jpg"
+                ],
+                description: "Headphone nirkabel dengan noise cancelling terbaik di kelasnya"
+            }
+        ];
+
+        let currentProductIndex = 0;
+        let currentImageIndex = 0;
+
+        function updateTime() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            document.getElementById('current-time').innerText = now.toLocaleDateString('id-ID', options);
+        }
+
+        function displayProduct() {
+            const product = products[currentProductIndex];
+            document.getElementById('product-image').src = product.images[currentImageIndex];
+            document.getElementById('product-name').innerText = product.name;
+            document.getElementById('product-price').innerText = `Rp ${product.price.toLocaleString('id-ID')}`;
+        }
+
+        function nextImage() {
+            const product = products[currentProductIndex];
+            currentImageIndex = (currentImageIndex + 1) % product.images.length;
+            displayProduct();
+        }
+
+        function prevImage() {
+            const product = products[currentProductIndex];
+            currentImageIndex = (currentImageIndex - 1 + product.images.length) % product.images.length;
+            displayProduct();
+        }
+
+        function loadProductList() {
+            const productList = document.getElementById('product-list');
+            products.forEach((product, index) => {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item product-list-item';
+                listItem.innerHTML = `
+                    <div class="d-flex align-items-center">
+                        <img src="${product.images[0]}" class="rounded me-3" width="50" height="50">
+                        <div>
+                            <strong>${product.name}</strong>
+                            <div class="text-primary">Rp ${product.price.toLocaleString('id-ID')}</div>
+                        </div>
+                    </div>
+                `;
+                listItem.onclick = () => {
+                    currentProductIndex = index;
+                    currentImageIndex = 0;
+                    displayProduct();
+                };
+                productList.appendChild(listItem);
+            });
+        }
+
+        function placeOrder() {
+            const customerName = document.getElementById('customer-name').value.trim();
+            const orderQuantity = parseInt(document.getElementById('order-quantity').value);
+            const promoCode = document.getElementById('promo-code').value.toUpperCase();
+
+            // Validasi form
+            if (!customerName || isNaN(orderQuantity) || orderQuantity <= 0) {
+                alert("Harap isi nama pemesan dan jumlah pesan dengan benar. Jumlah harus lebih dari 0.");
+                return;
+            }
+
+            const product = products[currentProductIndex];
+            const subtotal = product.price * orderQuantity;
+            let discount = 0;
+            let discountMessage = "Tidak ada potongan";
+
+            // Cek kode promo
+            if (promoCode === "DISKON10") {
+                discount = subtotal * 0.1;
+                discountMessage = "Diskon 10%";
+            }
+
+            const total = subtotal - discount;
+            const orderId = `INV-${Math.floor(10000 + Math.random() * 90000)}`;
+
+            // Tampilkan ringkasan pesanan
+            document.getElementById('order-summary').classList.remove('d-none');
+            document.getElementById('summary-content').innerHTML = `
+                <div class="summary-item">
+                    <strong>Order ID:</strong> <span class="badge bg-primary">${orderId}</span>
+                </div>
+                <div class="summary-item">
+                    <strong>Tanggal:</strong> ${new Date().toLocaleString('id-ID')}
+                </div>
+                <div class="summary-item">
+                    <strong>Nama Pemesan:</strong> ${customerName}
+                </div>
+                <div class="summary-item">
+                    <strong>Produk:</strong> ${product.name}
+                </div>
+                <div class="summary-item">
+                    <strong>Deskripsi:</strong> ${product.description}
+                </div>
+                <div class="summary-item">
+                    <strong>Jumlah:</strong> ${orderQuantity}
+                </div>
+                <div class="summary-item">
+                    <strong>Harga Satuan:</strong> Rp ${product.price.toLocaleString('id-ID')}
+                </div>
+                <div class="summary-item">
+                    <strong>Subtotal:</strong> Rp ${subtotal.toLocaleString('id-ID')}
+                </div>
+                <div class="summary-item">
+                    <strong>Potongan:</strong> Rp ${discount.toLocaleString('id-ID')} (${discountMessage})
+                </div>
+                <hr>
+                <div class="summary-item h4 text-success">
+                    <strong>Total Akhir:</strong> Rp ${total.toLocaleString('id-ID')}
+                </div>
+                <div class="alert alert-success mt-3">
+                    Terima kasih telah berbelanja di Toko Elektronik Cepat!
+                </div>
+            `;
+
+            // Scroll ke ringkasan pesanan
+            document.getElementById('order-summary').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Initialize
+        updateTime();
+        setInterval(updateTime, 1000);
+        loadProductList();
+        displayProduct();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

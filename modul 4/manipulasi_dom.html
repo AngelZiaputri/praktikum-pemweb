@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Latihan Manipulasi DOM</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    #judul {
+      color: steelblue;
+      transition: all 0.3s ease; 
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 0 10px;
+    }
+    .judul-ubah {
+      color: crimson;
+      font-size: 36px;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="judul">Selamat Datang di Praktikum JavaScript</h1>
+  <button onclick="ubahTeks()">Ubah Teks Judul</button>
+  <button onclick="resetTeks()">Reset</button>
+
+  <script>
+    function ubahTeks() {
+      var elemenJudul = document.getElementById("judul");
+      elemenJudul.innerHTML = "Teks Berhasil Diubah!";
+      elemenJudul.classList.add("judul-ubah"); // Using CSS class instead
+    }
+
+    function resetTeks() {
+      var elemenJudul = document.getElementById("judul");
+      elemenJudul.innerHTML = "Selamat Datang di Praktikum JavaScript";
+      elemenJudul.classList.remove("judul-ubah");
+    }
+  </script>
+</body>
+</html>

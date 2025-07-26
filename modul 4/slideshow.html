@@ -1,0 +1,41 @@
+ <!DOCTYPE html>
+ <html>
+ <head><title>Image Slideshow</title></head>
+ <body>
+ <h2>Galeri Gambar</h2>
+ <img id="slideshow-image" src="" alt="Slideshow" width="500">
+ <br>
+ <button onclick="gantiGambar(-1)">Previous</button>
+ <button onclick="gantiGambar(1)">Next</button>
+
+ <script>
+ var gambar = [
+ "https://www.google.com/imgres?q=singa&imgurl=https%3A%2F%2Fik.trn.asia%2Fuploads%2F2022%2F06%2F1656166237843.jpeg&imgrefurl=https%3A%2F%2Fhalopacitan.com%2Fread%2Fsinga-menguap-bukan-karena-ngantuk-terus&docid=TFQLiT8VYa8YZM&tbnid=70Y6ce4BTy91GM&vet=12ahUKEwjug6-PkpKOAxWGTWwGHfwhNZ0QM3oECBoQAA..i&w=1280&h=964&hcb=2&ved=2ahUKEwjug6-PkpKOAxWGTWwGHfwhNZ0QM3oECBoQAA"   
+ "https://www.google.com/imgres?q=kucing&imgurl=https%3A%2F%2Funair.ac.id%2Fwp-content%2Fuploads%2F2020%2F12%2FKucing.jpg&imgrefurl=https%3A%2F%2Funair.ac.id%2Fmengenal-ektoparasit-pada-kucing%2F&docid=rbes55Qs_V9pIM&tbnid=axkySU2PmFGNjM&vet=12ahUKEwjEj-3fkZKOAxUA4DgGHeM0Jv0QM3oECGUQAA..i&w=750&h=500&hcb=2&ved=2ahUKEwjEj-3fkZKOAxUA4DgGHeM0Jv0QM3oECGUQAA"
+ "https://www.google.com/imgres?q=kuda&imgurl=https%3A%2F%2Fwww.mediahijau.com%2Fpublic%2Fuploads%2Fberita%2FBerita_241306110627_kuda-liar-kembali-ke-kazakhstan-setelah-menghilang-dua-abad.jpg&imgrefurl=https%3A%2F%2Fwww.mediahijau.com%2Fread%2Fkuda-liar-kembali-ke-kazakhstan-setelah-menghilang-dua-abad%2F941&docid=0QL3NnF92oGMyM&tbnid=JICs7wHZYAjovM&vet=12ahUKEwikxridkpKOAxXcR2wGHVKOFdsQM3oECGYQAA..i&w=721&h=480&hcb=2&ved=2ahUKEwikxridkpKOAxXcR2wGHVKOFdsQM3oECGYQAA"
+ ];
+ var indexGambar = 0;
+ var imageElement = document.getElementById("slideshow-image");
+
+ function tampilkanGambar() {
+ imageElement.src = gambar[indexGambar];
+ }
+
+ function gantiGambar(arah) {
+ indexGambar += arah;
+ // Jika sudah gambar terakhir, kembali ke awal
+ if (indexGambar >= gambar.length) {
+ indexGambar = 0;
+ }
+ // Jika sudah gambar pertama dan menekan previous, pergi ke akhir
+ if (indexGambar < 0) {
+ indexGambar = gambar.length - 1;
+ }
+ tampilkanGambar();
+ }
+
+ // Tampilkan gambar pertama saat halaman dimuat
+ tampilkanGambar();
+ </script>
+ </body>
+ </html>
